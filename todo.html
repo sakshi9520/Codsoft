@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple To-Do List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #todo-container {
+            width: 300px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        #task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+
+        .task-actions {
+            display: flex;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="todo-container">
+        <h2>To-Do List</h2>
+        <input type="text" id="new-task" placeholder="Add a new task">
+        <button onclick="addTask()">Add</button>
+
+        <ul id="task-list"></ul>
+    </div>
+
+    <script>
+        // Check if there are tasks in local storage and load them
+        const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const taskList = document.getElementById('task-list');
+
+        function renderTasks() {
+            taskList.innerHTML = '';
+            savedTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = 'task';
+                li.innerHTML = `
+                    <span>${task}</span>
+                    <div class="task-actions">
+                        <button onclick="editTask('${task}')">Edit</button>
+                        <button onclick="deleteTask('${task}')">Delete</button>
+                    </div>
+                `;
+                taskList.appendChild(li);
+            });
+        }
+
+        function addTask() {
+            const newTaskInput = document.getElementById('new-task');
+            const newTask = newTaskInput.value.trim();
+
+            if (newTask !== '') {
+                savedTasks.push(newTask);
+                localStorage.setItem('tasks', JSON.stringify(savedTasks));
+                renderTasks();
+                newTaskInput.value = '';
+            }
+        }
+
+        function editTask(oldTask) {
+            const updatedTask = prompt('Edit task:', oldTask);
+
+            if (updatedTask !== null) {
+                const taskIndex = savedTasks.indexOf(oldTask);
+                savedTasks[taskIndex] = updatedTask;
+                localStorage.setItem('tasks', JSON.stringify(savedTasks));
+                renderTasks();
+            }
+        }
+
+        function deleteTask(task) {
+            const confirmDelete = confirm(`Are you sure you want to delete "${task}"?`);
+
+            if (confirmDelete) {
+                savedTasks.splice(savedTasks.indexOf(task), 1);
+                localStorage.setItem('tasks', JSON.stringify(savedTasks));
+                renderTasks();
+            }
+        }
+
+        renderTasks();
+    </script>
+
+</body>
+</html>

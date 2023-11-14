@@ -1,0 +1,45 @@
+/* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.logo {
+    /* Add styles for your logo or text */
+}
+
+.tagline {
+    font-style: italic;
+}
+
+#about, #skills, #projects, #resume, #contact {
+    padding: 50px;
+}
+
+.bio img {
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+.project {
+    margin-bottom: 30px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

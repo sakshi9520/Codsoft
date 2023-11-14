@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        #display {
+            grid-column: span 4;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 20px;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button.operator {
+            background-color: #ff9800;
+            color: #fff;
+        }
+
+        button.double {
+            grid-column: span 2;
+        }
+
+        button.equal {
+            background-color: #4caf50;
+            color: #fff;
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="calculator">
+        <div id="display">0</div>
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button class="operator">/</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button class="operator">*</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button class="operator">-</button>
+
+        <button class="double">0</button>
+        <button>.</button>
+        <button class="equal operator">=</button>
+        <button class="operator">+</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const display = document.getElementById('display');
+            const buttons = document.querySelectorAll('#calculator button');
+            let currentInput = '';
+            let operator = '';
+            let firstOperand = null;
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    handleButtonClick(button.innerText);
+                });
+            });
+
+            function handleButtonClick(value) {
+                if (!isNaN(value) || value === '.') {
+                    currentInput += value;
+                } else if (value === 'C') {
+                    clearCalculator();
+                } else if (value === '=') {
+                    performCalculation();
+                } else {
+                    handleOperator(value);
+                }
+
+                updateDisplay();
+            }
+
+            function handleOperator(value) {
+                if (currentInput !== '') {
+                    if (firstOperand === null) {
+                        firstOperand = parseFloat(currentInput);
+                    } else {
+                        performCalculation();
+                    }
+                    operator = value;
+                    currentInput = '';
+                } else {
+                    operator = value;
+                }
+            }
+
+            function performCalculation() {
+                if (currentInput !== '') {
+                    const secondOperand = parseFloat(currentInput);
+                    switch (operator) {
+                        case '+':
+                            firstOperand += secondOperand;
+                            break;
+                        case '-':
+                            firstOperand -= secondOperand;
+                            break;
+                        case '*':
+                            firstOperand *= secondOperand;
+                            break;
+                        case '/':
+                            if (secondOperand !== 0) {
+                                firstOperand /= secondOperand;
+                            } else {
+                                alert("Cannot divide by zero!");
+                                clearCalculator();
+                                return;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    currentInput = '';
+                    operator = '';
+                    updateDisplay();
+                }
+            }
+
+            function clearCalculator() {
+                currentInput = '';
+                operator = '';
+                firstOperand = null;
+                updateDisplay();
+            }
+
+            function updateDisplay() {
+                display.textContent = currentInput === '' ? '0' : currentInput;
+            }
+        });
+    </script>
+
+</body>
+</html>
